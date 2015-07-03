@@ -114,5 +114,5 @@ class ImagesNegativeTest(base.BaseV2ImageTest):
         image_id = body['id']
         # Now try uploading an image file
         image_file = StringIO.StringIO(data_utils.random_bytes())
-        self.assertRaises(lib_exc.Forbidden, self.client.store_image,image_id, image_file)
+        self.assertRaises(lib_exc.Forbidden, self.client.store_image_file,image_id, image_file)
 

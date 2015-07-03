@@ -27,7 +27,14 @@ class BasicOperationsImagesTest(base.BaseV2ImageTest):
     """
     Here we test the basic operations of images
     """
-    @decorators.skip_because(bug="1452987")
+
+    @classmethod
+    def skip_checks(cls):
+        super(base.BaseV2ImageTest, cls).skip_checks()
+        skip_msg = ("%s skipped as bring your own image is not supported" %
+                   cls.__name__)
+        raise cls.skipException(skip_msg)
+
     @test.attr(type='smoke')
     @test.idempotent_id('139b765e-7f3d-4b3d-8b37-3ca3876ee318')
     def test_register_upload_get_image_file(self):
@@ -92,7 +99,6 @@ class BasicOperationsImagesTest(base.BaseV2ImageTest):
         images_id = [item['id'] for item in images]
         self.assertNotIn(image_id, images_id)
 
-    @decorators.skip_because(bug="1452987")
     @test.attr(type='smoke')
     @test.idempotent_id('f66891a7-a35c-41a8-b590-a065c2a1caa6')
     def test_update_image(self):
@@ -130,6 +136,13 @@ class ListImagesTest(base.BaseV2ImageTest):
     """
 
     @classmethod
+    def skip_checks(cls):
+        super(base.BaseV2ImageTest, cls).skip_checks()
+        skip_msg = ("%s skipped as bring your own image is not supported" % 
+                     cls.__name__)
+        raise cls.skipException(skip_msg)
+
+    @classmethod
     def resource_setup(cls):
         super(ListImagesTest, cls).resource_setup()
         # We add a few images here to test the listing functionality of
@@ -158,7 +171,7 @@ class ListImagesTest(base.BaseV2ImageTest):
                                 disk_format=disk_format,
                                 visibility='private')
         image_id = body['id']
-       # cls.client.store_image(image_id, data=image_file)
+        cls.client.store_image_file(image_id, data=image_file)
 
         return image_id
 
@@ -173,7 +186,6 @@ class ListImagesTest(base.BaseV2ImageTest):
                 msg = "Failed to list images by %s" % key
                 self.assertEqual(params[key], image[key], msg)
 
-    @decorators.skip_because(bug="1452987")
     @test.idempotent_id('1e341d7a-90a9-494c-b143-2cdf2aeb6aee')
     def test_index_no_params(self):
         # Simple test to see all fixture images returned
@@ -183,14 +195,12 @@ class ListImagesTest(base.BaseV2ImageTest):
         for image in self.created_images:
             self.assertIn(image, image_list)
 
-    @decorators.skip_because(bug="1452987")
     @test.idempotent_id('9959ca1d-1aa7-4b7a-a1ea-0fff0499b37e')
     def test_list_images_param_container_format(self):
         # Test to get all images with container_format='bare'
         params = {"container_format": "bare"}
         self._list_by_param_value_and_assert(params)
 
-    @decorators.skip_because(bug="1452987")
     @test.idempotent_id('4a4735a7-f22f-49b6-b0d9-66e1ef7453eb')
     def test_list_images_param_disk_format(self):
         # Test to get all images with disk_format = raw
@@ -198,7 +208,6 @@ class ListImagesTest(base.BaseV2ImageTest):
         self._list_by_param_value_and_assert(params)
 
 
-    @decorators.skip_because(bug="1452987")
     @test.idempotent_id('7a95bb92-d99e-4b12-9718-7bc6ab73e6d2')
     def test_list_images_param_visibility(self):
         # Test to get all images with visibility = private
@@ -206,7 +215,6 @@ class ListImagesTest(base.BaseV2ImageTest):
         self._list_by_param_value_and_assert(params)
 
 
-    @decorators.skip_because(bug="1452987")
     @test.idempotent_id('cf1b9a48-8340-480e-af7b-fe7e17690876')
     def test_list_images_param_size(self):
         # Test to get all images by size
@@ -218,7 +226,6 @@ class ListImagesTest(base.BaseV2ImageTest):
         self._list_by_param_value_and_assert(params)
 
 
-    @decorators.skip_because(bug="1452987")
     @test.idempotent_id('4ad8c157-971a-4ba8-aa84-ed61154b1e7f')
     def test_list_images_param_min_max_size(self):
         # Test to get all images with size between 2000 to 3000
@@ -237,7 +244,6 @@ class ListImagesTest(base.BaseV2ImageTest):
                             "Failed to get images by size_min and size_max")
 
 
-    @decorators.skip_because(bug="1452987")
     @test.idempotent_id('7fc9e369-0f58-4d05-9aa5-0969e2d59d15')
     def test_list_images_param_status(self):
         # Test to get all active images
@@ -245,7 +251,6 @@ class ListImagesTest(base.BaseV2ImageTest):
         self._list_by_param_value_and_assert(params)
 
 
-    @decorators.skip_because(bug="1452987")
     @test.idempotent_id('e914a891-3cc8-4b40-ad32-e0a39ffbddbb')
     def test_list_images_param_limit(self):
         # Test to get images by limit
@@ -256,7 +261,6 @@ class ListImagesTest(base.BaseV2ImageTest):
                          "Failed to get images by limit")
 
 
-    @decorators.skip_because(bug="1452987")
     @test.idempotent_id('622b925c-479f-4736-860d-adeaf13bc371')
     def test_get_image_schema(self):
         # Test to get image schema
@@ -265,7 +269,6 @@ class ListImagesTest(base.BaseV2ImageTest):
         self.assertEqual("image", body['name'])
 
 
-    @decorators.skip_because(bug="1452987")
     @test.idempotent_id('25c8d7b2-df21-460f-87ac-93130bcdc684')
     def test_get_images_schema(self):
         # Test to get images schema
